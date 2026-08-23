@@ -8,7 +8,7 @@
 
 - [x] **ID1** — PRD e SDD (Diagrama Mermaid) estruturados, IA utilizada na modelagem  
 *Utilizado Chat GPT*
-- [ ] **ID2** — Aplicação estruturada em Monorepo (Front + Back) no GitHub
+- [x] **ID2** — Aplicação estruturada em Monorepo (Front + Back) no GitHub
 - [x] **ID3** — PRD mapeado em Histórias de Usuário no GitHub Projects (backlog de Issues)
 *Utilizado Claude Code com comando gh para criar as issues diretamente seguindo as necessidades dos diagramas*
 - [x] **ID4** — GitFlow com features isoladas e Pull Requests para integração

@@ -54,27 +54,61 @@ Toda a especificação do sistema está versionada em `/docs`:
 | Frontend | [Vue.js 3](https://vuejs.org) (SPA) |
 | Autenticação | JWT (Bearer Token) |
 | Tempo Real | WebSocket via [Socket.io](https://socket.io) |
-| Deploy API | [Render](https://render.com) |
-| Deploy Web | [Render](https://render.com)  |
+| Containerização | [Docker](https://www.docker.com/) + Docker Compose |
+| Ambiente de Desenvolvimento | Docker Compose + PostgreSQL |
+| Deploy | Docker + Render |
 | Cron Jobs | `@nestjs/schedule` |
-
 ---
+
+## Infraestrutura e Containerização
+
+O projeto utiliza **Docker** e **Docker Compose** para padronizar os ambientes de desenvolvimento e produção.
+
+A decisão de utilizar containers foi tomada para garantir que o ambiente de execução da aplicação seja reproduzível independentemente do sistema operacional utilizado pelo desenvolvedor, evitando diferenças de versões e dependências entre ambientes.
+
+São mantidas configurações distintas para cada finalidade:
+
+- `compose.dev.yml` — ambiente de desenvolvimento, com hot reload e PostgreSQL local;
+- `compose.prod.yml` — ambiente de produção, utilizando imagens otimizadas e conexão com o PostgreSQL hospedado no Neon.
+
+Cada aplicação possui seu próprio `Dockerfile`:
+
+- `apps/api/Dockerfile` — imagem do backend NestJS;
+- `apps/web/Dockerfile` — imagem do frontend Vue.js.
+
+O Docker Compose é responsável por orquestrar os serviços, enquanto o `Makefile` fornece comandos simplificados para operações recorrentes, como iniciar, parar, construir e consultar os logs dos containers.
+
+A containerização também permite que o mesmo processo de build utilizado no desenvolvimento seja reproduzido no ambiente de deploy, reduzindo divergências entre os ambientes.
 
 ## Estrutura do Monorepo
 
 ```
 sarei-e-doei/
 ├── README.md
-├── package.json          ← NPM Workspaces
+├── package.json
 ├── .env.example
 ├── .gitignore
-├── docs/
-│   ├── prd.md            ← Requisitos e User Stories
-│   ├── sdd.md            ← Design, ER e Contratos da API
-│   └── checklist.md      ← Controle de entrega
+├── Makefile
+├── compose.dev.yml
+├── compose.prod.yml
+│
 ├── apps/
-│   ├── api/              ← NestJS + Prisma + WebSocket
-│   └── web/              ← Vue.js 3 SPA
+│   ├── api/                  # Backend NestJS
+│   └── web/                  # Frontend Vue.js 3
+│
+├── docker/
+│   ├── api/
+│   │   └── Dockerfile        # Imagem do backend
+│   └── web/
+│       └── Dockerfile        # Imagem do frontend
+│
+├── docs/
+│   ├── prd.md                # Requisitos e regras de negócio
+│   ├── sdd.md                # Arquitetura e design do sistema
+│   └── checklist.md          # Indicadores de desempenho
+│
+└── specs/
+    └── ...                   # Especificações das histórias
 ```
 
 ---
